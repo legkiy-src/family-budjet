@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class FamilyMember extends Model
 {
     use HasFactory;
+
+    public function phone()
+    {
+        return $this->hasOne(User::class);
+    }
 }
