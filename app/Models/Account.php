@@ -13,4 +13,9 @@ class Account extends Model
     {
         return $this->hasMany(Operation::class);
     }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class);
+    }
 }

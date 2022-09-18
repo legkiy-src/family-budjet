@@ -13,4 +13,9 @@ class Operation extends Model
     {
         return $this->belongsTo(Account::class);
     }
+
+    public function article()
+    {
+        return $this->belongsTo(Article::class);
+    }
 }
