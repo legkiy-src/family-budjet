@@ -19,8 +19,8 @@ class CreateArticlesTable extends Migration
             $table->bigInteger('user_id')->comment('id пользователя');
             $table->integer('family_member_id')->nullable()->comment('id члена семьи');
             $table->tinyInteger('type')->comment('Тип (доход/расход)');
-            $table->string('name')->default('Наименование');
-            $table->string('description')->default('Описание');
+            $table->string('name')->comment('Наименование');
+            $table->string('description')->default('')->comment('Описание');
             $table->index('user_id');
             $table->index('family_member_id');
             $table->index('type');
