@@ -1,3 +1,8 @@
+<?php
+use Illuminate\Support\Facades\Route;
+
+$route = Route::currentRouteName();
+?>
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -12,9 +17,32 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ config('app.name') }}
-                    </x-nav-link>
+                    <nav class="navbar navbar-expand-lg bg-light">
+                        <div class="container-fluid">
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключатель навигации">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarNav">
+                                <ul class="navbar-nav">
+                                    <li class="nav-item">
+                                        <a class="nav-link {{ $route === 'accounts' ? 'active' : '' }}" aria-current="page" href="{{ route('accounts') }}">Счета</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link {{ $route === 'operations' ? 'active' : '' }}" href="{{ route('operations') }}">Операции</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link {{ $route === 'articles' ? 'active' : '' }}" href="{{ route('articles') }}">Статьи</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link {{ $route === 'currencies' ? 'active' : '' }}" href="{{ route('currencies') }}">Валюты</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link {{ $route === 'reports' ? 'active' : '' }}" href="{{ route('reports') }}">Отчёты</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </nav>
                 </div>
             </div>
 
