@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+    <div class="py-12 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <ul class="nav nav-pills mb-5" id="pills-tab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="accounts-home-tab" data-bs-toggle="pill" data-bs-target="#accounts-home" type="button" role="tab" aria-controls="accounts-home" aria-selected="true">Счета</button>
                 </li>
