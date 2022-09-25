@@ -20,14 +20,12 @@
         <!-- Bootstrap Bundle with Popper -->
         <script src="{{asset('bootstrap/js/bootstrap.bundle.min.js')}}"></script>
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
-            <div class="container">
-
-                    @yield('content')
-
+    <body>
+    @include('layouts.navigation')
+       <main class="container">
+            <div class="bg-light p-5 rounded">
+                @yield('content')
             </div>
-        </div>
+        </main>
     </body>
 </html>
