@@ -13,12 +13,13 @@
         <!-- Styles -->
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
         <!-- Scripts -->
+        <script src="{{asset('js/jquery/jquery-3.6.1.min.js')}}"></script>
         <script src="{{ asset('js/app.js') }}" defer></script>
         <!-- Bootstrap CSS -->
         <link href="{{asset('bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
-
         <!-- Bootstrap Bundle with Popper -->
         <script src="{{asset('bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+
     </head>
     <body>
     @include('layouts.navigation')
@@ -27,5 +28,6 @@
                 @yield('content')
             </div>
         </main>
+    @stack('scripts')
     </body>
 </html>
