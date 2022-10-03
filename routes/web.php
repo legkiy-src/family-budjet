@@ -17,20 +17,38 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/*Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');*/
+
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
-
-Route::get('/accounts{id?}', [AccountController::class, 'index'])->name('accounts');
 Route::get('/operations{id?}', [OperationController::class, 'index'])->name('operations');
 Route::get('/articles{id?}', [ArticleController::class, 'index'])->name('articles');
 Route::get('/currencies{id?}', [CurrencyController::class, 'index'])->name('currencies');
 Route::get('/reports', function () {
     return view('reports.reports');
 })->middleware(['auth'])->name('reports');
+
+Route::group(['middleware' => ['auth']], function () {
+
+    /*Route::get('/', function () {
+        return redirect('/accounts');
+    });*/
+
+    Route::group(['prefix' => "accounts"],function(){
+        Route::get('/', [AccountController::class, 'index'])->name('accounts');
+        Route::group(['as' => "accounts."], function(){
+            Route::any('create', [AccountController::class, 'create'])->name('create');
+        });
+        Route::group(['prefix' => '{id}', 'as' => "accounts."],function(){
+            //Route::post('/edit', [AccountController::class, 'edit'])->name('edit');
+            Route::match(['get', 'post'], '/edit', [AccountController::class, 'edit'])->name('edit');
+            Route::get('/delete', [AccountController::class, 'delete'])->name('delete');
+        });
+    });
+});
 
 require __DIR__.'/auth.php';

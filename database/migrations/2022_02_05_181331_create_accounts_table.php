@@ -17,14 +17,13 @@ class CreateAccountsTable extends Migration
         Schema::create('accounts', function (Blueprint $table) {
             $table->id()->comment('Первичный ключ');
             $table->bigInteger('user_id')->comment('id пользователя');
-            $table->integer('family_member_id')->nullable()->comment('id члена семьи');
             $table->string('name')->default('')->comment('Имя');
             $table->bigInteger('balance')->default(0)->comment('Баланс');
-            $table->integer('currency')->nullable()->comment('Валюта');
-            $table->string('description')->default('')->comment('Описание');
+            $table->integer('currency_id')->nullable()->comment('id из справочника валют');
+            $table->string('description')->nullable()->default('')->comment('Описание');
             $table->index('user_id');
             $table->index('family_member_id');
-            $table->index('currency');
+            $table->index('currency_id');
             $table->timestamps();
         });
 
