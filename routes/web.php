@@ -27,7 +27,7 @@ Route::get('/', function () {
 
 Route::get('/operations{id?}', [OperationController::class, 'index'])->name('operations');
 Route::get('/articles{id?}', [ArticleController::class, 'index'])->name('articles');
-Route::get('/currencies{id?}', [CurrencyController::class, 'index'])->name('currencies');
+//Route::get('/currencies{id?}', [CurrencyController::class, 'index'])->name('currencies');
 Route::get('/reports', function () {
     return view('reports.reports');
 })->middleware(['auth'])->name('reports');
@@ -38,15 +38,25 @@ Route::group(['middleware' => ['auth']], function () {
         return redirect('/accounts');
     });*/
 
-    Route::group(['prefix' => "accounts"],function(){
+    Route::group(['prefix' => "accounts"],function() {
         Route::get('/', [AccountController::class, 'index'])->name('accounts');
-        Route::group(['as' => "accounts."], function(){
+        Route::group(['as' => "accounts."], function() {
             Route::any('create', [AccountController::class, 'create'])->name('create');
         });
-        Route::group(['prefix' => '{id}', 'as' => "accounts."],function(){
-            //Route::post('/edit', [AccountController::class, 'edit'])->name('edit');
+        Route::group(['prefix' => '{id}', 'as' => "accounts."],function() {
             Route::match(['get', 'post'], '/edit', [AccountController::class, 'edit'])->name('edit');
             Route::get('/delete', [AccountController::class, 'delete'])->name('delete');
+        });
+    });
+
+    Route::group(['prefix' => "currencies"],function() {
+        Route::get('/', [CurrencyController::class, 'index'])->name('currencies');
+        Route::group(['as' => "currencies."], function() {
+            Route::any('create', [CurrencyController::class, 'create'])->name('create');
+        });
+        Route::group(['prefix' => '{id}', 'as' => "currencies."],function() {
+            Route::match(['get', 'post'], '/edit', [CurrencyController::class, 'edit'])->name('edit');
+            Route::get('/delete', [CurrencyController::class, 'delete'])->name('delete');
         });
     });
 });

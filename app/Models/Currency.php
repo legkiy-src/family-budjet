@@ -9,5 +9,5 @@ class Currency extends Model
 {
     use HasFactory;
 
-    protected $bable = 'currencies';
+    protected $table = 'currencies';
 }
