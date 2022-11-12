@@ -16,6 +16,7 @@ class CreateCurrenciesTable extends Migration
     {
         Schema::create('currencies', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('user_id')->comment('id пользователя');
             $table->string('name')->default('')->comment('Название валюты');
             $table->string('symbol')->default('')->comment('Обозначение');
             $table->timestamps();
