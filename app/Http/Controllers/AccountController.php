@@ -5,39 +5,41 @@ namespace App\Http\Controllers;
 use App\Models\Account;
 use App\Models\Currency;
 use Illuminate\Http\Request;
+use App\Services\AccountService;
 
 class AccountController extends Controller
 {
+    private AccountService $accountService;
+
+    public function __construct(AccountService $accountService)
+    {
+        $this->accountService = $accountService;
+    }
+
     public function index()
     {
-        $accounts = Account::with(['currency'])
-            ->where('user_id', auth()->user()->id)
-            ->get();
+        $accounts = $this->accountService->getAccounts();
 
         return view('accounts.accounts', [
             'accounts' => $accounts,
         ]);
     }
 
-    public function edit(Request $request, $id)
+    public function edit(Request $request, int $id)
     {
-        $currencies = Currency::all();
-        $account = Account::where('user_id', auth()->user()->id)
-            ->where('id', $id)->first();
+        $account = $this->accountService->getAccountById($id);
 
         if (!$request->all()) {
-            return view('accounts.edit', [
-                'account' => $account,
-                'currencies' => $currencies,
-            ]);
+            return view('accounts.edit', $account);
         }
 
-        $account->user_id = auth()->user()->id;
-        $account->name = $request->post('name');
-        $account->balance = $request->post('balance') * 100;
-        $account->currency_id = $request->post('currency');
-        $account->description = $request->post('description');
-        $account->save();
+        $this->accountService->updateAccount(
+            $id,
+            $request->post('name'),
+            $request->post('balance'),
+            $request->post('currency'),
+            $request->post('description')
+        );
 
         return redirect('/accounts');
     }
@@ -54,9 +56,6 @@ class AccountController extends Controller
 
     public function create(Request $request)
     {
-        //dd($request->post('id'));
-        //dd(auth()->user()->name);
-
         $currencies = Currency::all();
 
         if (!$request->all()) {
@@ -72,13 +71,12 @@ class AccountController extends Controller
             'description' => 'max:255'
         ]);
 
-        $account = new Account();
-        $account->user_id = auth()->user()->id;
-        $account->name = $request->post('name');
-        $account->balance = $request->post('balance') * 100;
-        $account->currency_id = $request->post('currency');
-        $account->description = $request->post('description');
-        $account->save();
+        $this->accountService->createAccount(
+            $request->post('name'),
+            $request->post('balance'),
+            $request->post('currency'),
+            $request->post('description')
+        );
 
         return redirect('/accounts');
     }
