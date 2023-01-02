@@ -20,7 +20,7 @@
                 <tr>
                     <td><a href="{{ route('accounts.edit', ['id' => $account['id']]) }}">{{ $account['name'] }}</a></td>
                     <td>{{ number_format($account['balance'] / 100, 2) }}</td>
-                    <td>{{ $account->currency->name }}</td>
+                    <td>{{ $account->currency->name ?? '' }}</td>
                     <td>{{ $account['description'] }}</td>
                     <td>
                         <a href="{{ route('accounts.edit', ['id' => $account['id']]) }}" class="btn btn-light" role="button">
