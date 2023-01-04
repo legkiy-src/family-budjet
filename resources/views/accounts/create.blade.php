@@ -18,7 +18,7 @@
         </div>
         <div class="mb-3">
             <label for="currencies" class="form-label">Валюта</label>
-            <select id="currencies" id="currencies" name="currency" class="form-select">
+            <select id="currencies" name="currency" class="form-select">
                 @foreach($currencies as $currency)
                     <option value="{{ $currency->id }}">{{ $currency->name }}</option>
                 @endforeach
@@ -30,7 +30,7 @@
         </div>
         <div class="mb-3">
             <label for="description" class="form-label">Описание</label>
-            <input type="text" class="form-control" id="description" name="description" value="{{ old('description') }}">
+            <textarea class="form-control" id="description" name="description">{{ old('description') }}</textarea>
         </div>
         <button type="submit" class="btn btn-primary">Сохранить</button>
     </form>

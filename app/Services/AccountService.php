@@ -41,8 +41,9 @@ class AccountService
         return $this->accountRepository->updateAccount($userId, $id, $name, $balance * 100, $currency, $description);
     }
 
-    public function deleteAccount(int $userId, int $id) : mixed
+    public function deleteAccount(int $id) : mixed
     {
+        $userId = auth()->user()->id;
         return $this->accountRepository->deleteAccount($userId, $id);
     }
 

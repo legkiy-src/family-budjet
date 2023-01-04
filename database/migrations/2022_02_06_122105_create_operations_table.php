@@ -31,8 +31,6 @@ class CreateOperationsTable extends Migration
             $table->index('account_id');
             $table->timestamps();
         });
-
-        DB::statement("ALTER TABLE account_balances comment 'Остатки на счетах'");
     }
 
     /**

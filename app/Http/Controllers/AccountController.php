@@ -33,6 +33,13 @@ class AccountController extends Controller
             return view('accounts.edit', $account);
         }
 
+        $request->validate([
+            'name' => 'required|max:255',
+            'balance' => 'required|numeric',
+            'currency' => 'required|numeric',
+            'description' => 'max:255'
+        ]);
+
         $this->accountService->updateAccount(
             $id,
             $request->post('name'),
@@ -46,10 +53,7 @@ class AccountController extends Controller
 
     public function delete($id)
     {
-        $account = Account::where('user_id', auth()->user()->id)
-            ->where('id', $id)->first();
-
-        $account->delete();
+        $this->accountService->deleteAccount($id);
 
         return redirect('/accounts');
     }
@@ -58,7 +62,8 @@ class AccountController extends Controller
     {
         $currencies = Currency::all();
 
-        if (!$request->all()) {
+        if (!$request->all())
+        {
             return view('accounts.create', [
                 'currencies' => $currencies,
             ]);
