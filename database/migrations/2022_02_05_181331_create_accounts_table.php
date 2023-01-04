@@ -22,7 +22,6 @@ class CreateAccountsTable extends Migration
             $table->integer('currency_id')->nullable()->comment('id из справочника валют');
             $table->string('description')->nullable()->default('')->comment('Описание');
             $table->index('user_id');
-            $table->index('family_member_id');
             $table->index('currency_id');
             $table->timestamps();
         });

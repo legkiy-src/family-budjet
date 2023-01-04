@@ -26,7 +26,7 @@ Route::get('/', function () {
 });
 
 Route::get('/operations{id?}', [OperationController::class, 'index'])->name('operations');
-Route::get('/articles{id?}', [ArticleController::class, 'index'])->name('articles');
+//Route::get('/articles{id?}', [ArticleController::class, 'index'])->name('articles');
 //Route::get('/currencies{id?}', [CurrencyController::class, 'index'])->name('currencies');
 Route::get('/reports', function () {
     return view('reports.reports');
@@ -57,6 +57,17 @@ Route::group(['middleware' => ['auth']], function () {
         Route::group(['prefix' => '{id}', 'as' => "currencies."],function() {
             Route::match(['get', 'post'], '/edit', [CurrencyController::class, 'edit'])->name('edit');
             Route::get('/delete', [CurrencyController::class, 'delete'])->name('delete');
+        });
+    });
+
+    Route::group(['prefix' => "articles"],function() {
+        Route::get('/', [ArticleController::class, 'index'])->name('articles');
+        Route::group(['as' => "articles."], function() {
+            Route::any('create', [ArticleController::class, 'create'])->name('create');
+        });
+        Route::group(['prefix' => '{id}', 'as' => "articles."],function() {
+            Route::match(['get', 'post'], '/edit', [ArticleController::class, 'edit'])->name('edit');
+            Route::get('/delete', [ArticleController::class, 'delete'])->name('delete');
         });
     });
 });

@@ -20,14 +20,14 @@ class CreateArticlesTable extends Migration
             $table->integer('family_member_id')->nullable()->comment('id члена семьи');
             $table->tinyInteger('type')->comment('Тип (доход/расход)');
             $table->string('name')->comment('Наименование');
-            $table->string('description')->default('')->comment('Описание');
+            $table->string('description')->nullable()->default('')->comment('Описание');
             $table->index('user_id');
             $table->index('family_member_id');
             $table->index('type');
             $table->timestamps();
         });
 
-        DB::statement("ALTER TABLE articles comment 'Статьи расходов/доходов'");
+        DB::statement("ALTER TABLE articles comment 'Статьи доходов/расходов'");
     }
 
     /**
