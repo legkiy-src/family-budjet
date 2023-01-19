@@ -3,13 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Currency;
+use App\Services\CurrencyService;
 use Illuminate\Http\Request;
 
 class CurrencyController extends Controller
 {
+    private CurrencyService $currencyService;
+
+    public function __construct(CurrencyService $currencyService)
+    {
+        $this->currencyService = $currencyService;
+    }
+
     public function index()
     {
-        $currencies = Currency::all();
+        $currencies = $this->currencyService->getCurrencies();
 
         return view('currencies.currencies', [
             'currencies' => $currencies,

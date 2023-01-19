@@ -17,20 +17,22 @@ class CreateOperationsTable extends Migration
         Schema::create('operations', function (Blueprint $table) {
             $table->id()->comment('Первичный ключ');
             $table->bigInteger('user_id')->comment('id пользователя');
-            $table->dateTime('operation_date')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('Дата операции');
-            $table->integer('operation_type')->comment('тип операции');
             $table->bigInteger('account_id')->comment('id счета');
-            $table->bigInteger('article_id')->comment('id статьи');
-            $table->bigInteger('operation_sum')->default(0)->comment('Сумма операции');
-            $table->bigInteger('account_decrement_id')->nullable()->comment('счет списания');
-            $table->bigInteger('account_increment_id')->nullable()->comment('счет поступления');
-            $table->string('description')->default('')->comment('Описание');
+            $table->integer('operation_type')->comment('Тип операции');
+            $table->bigInteger('sum')->default(0)->comment('Сумма операции');
+            $table->string('source_table_name')->comment('Таблица источник операции');
+            $table->bigInteger('source_table_id')->nullable()->comment('id записи в таблице источника операции');
+            $table->string('description')->nullable()->default('')->comment('Описание');
             $table->index('user_id');
-            $table->index('operation_date');
-            $table->index('operation_type');
             $table->index('account_id');
+            $table->index('operation_type');
+            $table->index('sum');
+            $table->index('source_table_name');
+            $table->index('source_table_id');
             $table->timestamps();
         });
+
+        DB::statement("ALTER TABLE operations comment 'Операции'");
     }
 
     /**

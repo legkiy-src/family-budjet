@@ -17,7 +17,7 @@ $route = Route::currentRouteName();
                     <a class="nav-link {{ $route === 'accounts' ? 'active' : '' }}" aria-current="page" href="{{ route('accounts') }}">Счета</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ $route === 'operations' ? 'active' : '' }}" href="{{ route('operations') }}">Операции</a>
+                    <a class="nav-link {{ $route === 'revenues' ? 'active' : '' }}" href="{{ route('revenues') }}">Доходы</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ $route === 'articles' ? 'active' : '' }}" href="{{ route('articles') }}">Статьи</a>

@@ -2,10 +2,9 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CreateArticlesTable extends Migration
+class CreateRevenuesDetailTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,17 +13,21 @@ class CreateArticlesTable extends Migration
      */
     public function up()
     {
-        Schema::create('articles', function (Blueprint $table) {
+        Schema::create('revenues_detail', function (Blueprint $table) {
             $table->id()->comment('Первичный ключ');
             $table->bigInteger('user_id')->comment('id пользователя');
-            $table->tinyInteger('type')->comment('Тип (доход/расход)');
-            $table->string('name')->comment('Наименование');
+            $table->bigInteger('revenue_id')->comment('id дохода');
+            $table->bigInteger('article_id')->comment('id статьи дохода');
+            $table->bigInteger('sum')->default(0)->comment('Сумма');
             $table->string('description')->nullable()->default('')->comment('Описание');
-            $table->index('user_id');
             $table->timestamps();
+            $table->index('user_id');
+            $table->index('revenue_id');
+            $table->index('article_id');
+            $table->index('sum');
         });
 
-        DB::statement("ALTER TABLE articles comment 'Статьи доходов/расходов'");
+        DB::statement("ALTER TABLE revenues_detail comment 'Состав дохода'");
     }
 
     /**
@@ -34,6 +37,6 @@ class CreateArticlesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('articles');
+        Schema::dropIfExists('revenues_detail');
     }
 }

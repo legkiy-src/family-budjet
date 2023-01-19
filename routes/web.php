@@ -4,6 +4,8 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\OperationController;
+use App\Http\Controllers\RevenuesController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,6 +22,14 @@ use Illuminate\Support\Facades\Route;
 /*Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');*/
+
+/*Route::get('/clear', function() {
+    Artisan::call('cache:clear');
+    Artisan::call('config:cache');
+    Artisan::call('view:clear');
+    Artisan::call('route:clear');
+    echo "Кэш очищен."; exit;
+});*/
 
 Route::get('/', function () {
     return view('welcome');
@@ -68,6 +78,17 @@ Route::group(['middleware' => ['auth']], function () {
         Route::group(['prefix' => '{id}', 'as' => "articles."],function() {
             Route::match(['get', 'post'], '/edit', [ArticleController::class, 'edit'])->name('edit');
             Route::get('/delete', [ArticleController::class, 'delete'])->name('delete');
+        });
+    });
+
+    Route::group(['prefix' => "revenues"],function() {
+        Route::get('/', [RevenuesController::class, 'index'])->name('revenues');
+        Route::group(['as' => "revenues."], function() {
+            Route::any('create', [RevenuesController::class, 'create'])->name('create');
+        });
+        Route::group(['prefix' => '{id}', 'as' => "revenues."],function() {
+            Route::match(['get', 'post'], '/edit', [RevenuesController::class, 'edit'])->name('edit');
+            Route::get('/delete', [RevenuesController::class, 'delete'])->name('delete');
         });
     });
 });

@@ -30,12 +30,12 @@
             </select>
         </div>
         <div class="mb-3">
-            <label for="balance" class="form-label">Начальный остаток</label>
-            <input type="number" min="0.01" step="0.01" class="form-control" id="balance" name="balance" value="{{ number_format($account->balance / 100, 2) }}">
+            <label for="balance" class="form-label">Баланс</label>
+            <input type="text" class="form-control" id="balance" name="balance" value="{{ $account['balance'] / 100 }}">
         </div>
         <div class="mb-3">
             <label for="description" class="form-label">Описание</label>
-            <input type="text" class="form-control" id="description" name="description" value="{{ $account->description }}">
+            <textarea class="form-control" id="description" name="description">{{ $account->description }}</textarea>
         </div>
         <button type="submit" class="btn btn-primary">Сохранить</button>
     </form>
