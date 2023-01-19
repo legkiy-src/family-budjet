@@ -12,6 +12,7 @@ class RevenueService
     private RevenuesRepository $revenuesRepository;
     private OperationService $operationService;
     private AccountService $accountService;
+    private int $userId;
 
     public function __construct(
         RevenuesRepository $revenuesRepository,
@@ -24,16 +25,26 @@ class RevenueService
         $this->accountService = $accountService;
     }
 
+    private function getUserId(): int
+    {
+        if (empty($this->userId))
+        {
+            $this->userId = auth()->user()->id;
+        }
+
+        return $this->userId;
+    }
+
     public function getRevenues(): Collection
     {
-        $userId = auth()->user()->id;
+        $userId = $this->getUserId();
 
         return $this->revenuesRepository->getRevenues($userId);
     }
 
-    public function createRevenue(int $accountId, int $articleId, int $totalSum, ?string $description = '') : bool
+    public function createRevenue(int $accountId, int $articleId, int $totalSum, ?string $description = ''): bool
     {
-        $userId = auth()->user()->id;
+        $userId = $this->getUserId();
 
         $account = $this->accountService->getAccountById($accountId);
 
@@ -66,14 +77,14 @@ class RevenueService
 
     public function getRevenueById(int $id): ?Model
     {
-        $userId = auth()->user()->id;
+        $userId = $this->getUserId();
 
         return $this->revenuesRepository->getRevenueById($userId, $id);
     }
 
     public function updateRevenue(int $id, int $accountId, int $articleId, int $totalSum, ?string $description = ''): bool
     {
-        $userId = auth()->user()->id;
+        $userId = $this->getUserId();
 
         return DB::transaction(function () use ($userId, $id, $accountId, $articleId, $totalSum, $description) {
 
@@ -90,9 +101,9 @@ class RevenueService
         });
     }
 
-    public function deleteRevenue(int $id) : mixed
+    public function deleteRevenue(int $id): mixed
     {
-        $userId = auth()->user()->id;
+        $userId = $this->getUserId();
 
         $revenue = $this->revenuesRepository->getRevenueById($userId, $id);
 
