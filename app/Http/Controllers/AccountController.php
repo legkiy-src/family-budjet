@@ -4,16 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use App\Models\Currency;
+use App\Services\CurrencyService;
 use Illuminate\Http\Request;
 use App\Services\AccountService;
 
 class AccountController extends Controller
 {
     private AccountService $accountService;
+    private CurrencyService $currencyService;
 
-    public function __construct(AccountService $accountService)
+    public function __construct(
+        AccountService $accountService,
+        CurrencyService $currencyService
+    )
     {
         $this->accountService = $accountService;
+        $this->currencyService = $currencyService;
     }
 
     public function index()
@@ -60,7 +66,7 @@ class AccountController extends Controller
 
     public function create(Request $request)
     {
-        $currencies = Currency::all();
+        $currencies = $this->currencyService->getCurrencies();
 
         if (!$request->all())
         {

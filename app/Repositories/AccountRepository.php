@@ -56,4 +56,16 @@ class AccountRepository
                 'description' => $description
             ]);
     }
+
+    public function updateBalance(int $userId, int $id, float $balance): bool
+    {
+        $account = Account::query()
+            ->where('user_id', '=', $userId)
+            ->where('id', '=', $id)
+            ->first();
+
+        $account->balance = $balance;
+
+        return $account->save();
+    }
 }
