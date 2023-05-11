@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRevenuesTable extends Migration
+class CreateExpensesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class CreateRevenuesTable extends Migration
      */
     public function up()
     {
-        Schema::create('revenues', function (Blueprint $table) {
+        Schema::create('expenses', function (Blueprint $table) {
             $table->id()->comment('Первичный ключ');;
             $table->bigInteger('user_id')->comment('id пользователя');
             $table->bigInteger('operation_id')->nullable()->comment('id операции');
@@ -39,6 +39,6 @@ class CreateRevenuesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('revenues');
+        Schema::dropIfExists('expenses');
     }
 }
