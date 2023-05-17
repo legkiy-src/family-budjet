@@ -1,0 +1,118 @@
+<?php
+
+
+namespace App\Services;
+
+
+use App\Repositories\ExpenseRepository;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+
+class ExpenseService
+{
+    private ExpenseRepository $expenseRepository;
+    private OperationService $operationService;
+    private AccountService $accountService;
+    private int $userId;
+
+    public function __construct(
+        ExpenseRepository $expenseRepository,
+        OperationService $operationService,
+        AccountService $accountService
+    )
+    {
+        $this->expenseRepository = $expenseRepository;
+        $this->operationService = $operationService;
+        $this->accountService = $accountService;
+    }
+
+    private function getUserId(): int
+    {
+        if (empty($this->userId)) {
+            $this->userId = auth()->user()->id;
+        }
+
+        return $this->userId;
+    }
+
+    public function getExpenses(): Collection
+    {
+        $userId = $this->getUserId();
+
+        return $this->expenseRepository->getExpenses($userId);
+    }
+
+    public function createExpense(int $accountId, int $articleId, int $totalSum, ?string $description = ''): bool
+    {
+        $userId = $this->getUserId();
+
+        $account = $this->accountService->getAccountById($accountId);
+
+        return DB::transaction(function () use ($userId, $accountId, $articleId, $totalSum, $description, $account) {
+
+            $operationId = $this->operationService->createOperation(
+                $accountId,
+                0,
+                $totalSum,
+                'expenses',
+                null
+            );
+
+            $revenueId = $this->expenseRepository->createExpense(
+                $userId,
+                $operationId,
+                $accountId,
+                $articleId,
+                $totalSum * 100,
+                $description
+            );
+
+            $balance = ($account['account']->balance + $totalSum) * 100;
+
+            $this->accountService->balanceDecrement($accountId, $balance);
+
+            return $this->operationService->updateSourceTableId($operationId, $revenueId);
+        });
+    }
+
+    public function getExpenseById(int $id): ?Model
+    {
+        $userId = $this->getUserId();
+
+        return $this->expenseRepository->getExpenseById($userId, $id);
+    }
+
+    public function updateExpense(int $id, int $accountId, int $articleId, int $totalSum, ?string $description = ''): bool
+    {
+        $userId = $this->getUserId();
+
+        return DB::transaction(function () use ($userId, $id, $accountId, $articleId, $totalSum, $description) {
+
+            $this->expenseRepository->updateExpense(
+                $id,
+                $userId,
+                $accountId,
+                $articleId,
+                $totalSum * 100,
+                $description
+            );
+
+            return $this->accountService->updateBalance($accountId, $totalSum);
+        });
+    }
+
+    public function deleteExpense(int $id): mixed
+    {
+        $userId = $this->getUserId();
+
+        $revenue = $this->expenseRepository->getExpenseById($userId, $id);
+
+        return DB::transaction(function () use ($userId, $id, $revenue) {
+
+            $this->accountService->balanceDecrement($revenue->account_id, $revenue->total_sum);
+
+            return $this->expenseRepository->deleteExpense($userId, $id);
+        });
+    }
+}
