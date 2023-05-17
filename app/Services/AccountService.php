@@ -72,7 +72,7 @@ class AccountService
     {
         $userId = auth()->user()->id;
 
-        $account = $this->accountRepository->getAccountById($userId, $id);
+        $account = $this->accountRepository->getAccountById($id, $userId);
         $account->balance += $sum;
 
         return $account->save();
@@ -82,7 +82,7 @@ class AccountService
     {
         $userId = auth()->user()->id;
 
-        $account = $this->accountRepository->getAccountById($userId, $id);
+        $account = $this->accountRepository->getAccountById($id, $userId);
         $account->balance -= $sum;
 
         return $account->save();

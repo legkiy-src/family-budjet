@@ -20,6 +20,9 @@ $route = Route::currentRouteName();
                     <a class="nav-link {{ $route === 'revenues' ? 'active' : '' }}" href="{{ route('revenues') }}">Доходы</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link {{ $route === 'expenses' ? 'active' : '' }}" href="{{ route('expenses') }}">Расходы</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link {{ $route === 'articles' ? 'active' : '' }}" href="{{ route('articles') }}">Статьи</a>
                 </li>
                 <li class="nav-item">

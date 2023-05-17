@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\OperationController;
 use App\Http\Controllers\RevenuesController;
 use Illuminate\Support\Facades\Artisan;
@@ -89,6 +90,17 @@ Route::group(['middleware' => ['auth']], function () {
         Route::group(['prefix' => '{id}', 'as' => "revenues."],function() {
             Route::match(['get', 'post'], '/edit', [RevenuesController::class, 'edit'])->name('edit');
             Route::get('/delete', [RevenuesController::class, 'delete'])->name('delete');
+        });
+    });
+
+    Route::group(['prefix' => "expenses"],function() {
+        Route::get('/', [ExpenseController::class, 'index'])->name('expenses');
+        Route::group(['as' => "expenses."], function() {
+            Route::any('create', [ExpenseController::class, 'create'])->name('create');
+        });
+        Route::group(['prefix' => '{id}', 'as' => "expenses."],function() {
+            Route::match(['get', 'post'], '/edit', [ExpenseController::class, 'edit'])->name('edit');
+            Route::get('/delete', [ExpenseController::class, 'delete'])->name('delete');
         });
     });
 });
