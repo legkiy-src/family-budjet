@@ -15,12 +15,12 @@ class ArticleRepository
             ->get();
     }
 
-    public function createArticle(int $userId, int $type, string $name, ?string $description) : bool
+    public function createArticle(int $userId, int $operationType, string $name, ?string $description) : bool
     {
         return Article::query()
             ->insert([
                 'user_id' => $userId,
-                'type' => $type,
+                'operation_type_id' => $operationType,
                 'name' => $name,
                 'description' => $description
             ]);
@@ -28,7 +28,7 @@ class ArticleRepository
 
     public function getArticleById(int $userId, int $id) : ?Model
     {
-        return Article::query()
+        return Article::with('operationTypes')
             ->where('user_id', $userId)
             ->where('id', $id)
             ->first();
@@ -52,5 +52,12 @@ class ArticleRepository
             ->where('user_id', '=', $userId)
             ->where('id', '=', $id)
             ->delete();
+    }
+
+    public function getArticlesByOperationTypeId(int $operationTypeId) : Collection
+    {
+        return Article::query()
+            ->where('operation_type_id', '=', $operationTypeId)
+            ->get();
     }
 }

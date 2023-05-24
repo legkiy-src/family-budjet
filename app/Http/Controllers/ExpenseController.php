@@ -40,7 +40,7 @@ class ExpenseController extends Controller
         if (!$request->all())
         {
             $accounts = $this->accountService->getAccounts();
-            $articles = $this->articleService->getArticles();
+            $articles = $this->articleService->getArticlesByOperationTypeName('Расход');
 
             return view('expenses.create', [
                 'accounts' => $accounts,

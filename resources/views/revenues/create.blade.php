@@ -15,14 +15,16 @@
         <div class="mb-3">
             <label for="accounts" class="form-label">Счёт</label>
             <select id="accounts" name="account" class="form-select">
+                <option></option>
                 @foreach($accounts as $account)
                     <option value="{{ $account->id }}">{{ $account->name }}</option>
                 @endforeach
             </select>
         </div>
         <div class="mb-3">
-            <label for="articles" class="form-label">Стаья дохода/расхода</label>
+            <label for="articles" class="form-label">Стаья дохода</label>
             <select id="articles" name="article" class="form-select">
+                <option></option>
                 @foreach($articles as $article)
                     <option value="{{ $article->id }}">{{ $article->name }}</option>
                 @endforeach

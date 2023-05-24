@@ -13,10 +13,12 @@
     <form action="{{ route('articles.create') }}" method="POST">
         @csrf
         <div class="mb-3">
-            <label for="type" class="form-label">Тип</label>
-            <select id="type" name="type" class="form-select">
-                <option value="1">Доход</option>
-                <option value="2">Расход</option>
+            <label for="operationType" class="form-label">Тип операции</label>
+            <select id="operationType" name="operationType" class="form-select">
+                <option></option>
+                @foreach($operationTypes as $operationType)
+                    <option value="{{ $operationType->id }}">{{ $operationType->name }}</option>
+                @endforeach
             </select>
         </div>
         <div class="mb-3">

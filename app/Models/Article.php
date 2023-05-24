@@ -13,4 +13,9 @@ class Article extends Model
     {
         return $this->hasMany(Operation::class);
     }
+
+    public function operationTypes()
+    {
+        return $this->belongsTo(OperationType::class, 'operation_type_id');
+    }
 }

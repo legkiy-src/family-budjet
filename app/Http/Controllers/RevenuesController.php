@@ -40,7 +40,7 @@ class RevenuesController extends Controller
         if (!$request->all())
         {
             $accounts = $this->accountService->getAccounts();
-            $articles = $this->articleService->getArticles();
+            $articles = $this->articleService->getArticlesByOperationTypeName('Доход');
 
             return view('revenues.create', [
                 'accounts' => $accounts,

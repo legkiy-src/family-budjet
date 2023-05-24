@@ -9,7 +9,7 @@ class OperationRepository
     public function createOperation(
         int $userId,
         int $accountId,
-        int $operationType,
+        int $operationTypeId,
         int $sum,
         ?string $sourceTableName,
         ?int $sourceTableId,
@@ -20,7 +20,7 @@ class OperationRepository
 
         $operation->user_id = $userId;
         $operation->account_id = $accountId;
-        $operation->operation_type = $operationType;
+        $operation->operation_type_id = $operationTypeId;
         $operation->sum = $sum;
         $operation->source_table_name = $sourceTableName;
         $operation->source_table_id = $sourceTableId;
