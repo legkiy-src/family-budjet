@@ -14,17 +14,20 @@ class ExpenseService
     private ExpenseRepository $expenseRepository;
     private OperationService $operationService;
     private AccountService $accountService;
+    private ArticleService $articleService;
     private int $userId;
 
     public function __construct(
         ExpenseRepository $expenseRepository,
         OperationService $operationService,
-        AccountService $accountService
+        AccountService $accountService,
+        ArticleService $articleService
     )
     {
         $this->expenseRepository = $expenseRepository;
         $this->operationService = $operationService;
         $this->accountService = $accountService;
+        $this->articleService = $articleService;
     }
 
     private function getUserId(): int
@@ -51,9 +54,11 @@ class ExpenseService
 
         return DB::transaction(function () use ($userId, $accountId, $articleId, $totalSum, $description, $account) {
 
+            $article = $this->articleService->getArticleById($articleId);
+
             $operationId = $this->operationService->createOperation(
                 $accountId,
-                0,
+                $article->operationTypes->id,
                 $totalSum,
                 'expenses',
                 null

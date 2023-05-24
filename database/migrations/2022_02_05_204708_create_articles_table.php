@@ -17,7 +17,7 @@ class CreateArticlesTable extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->id()->comment('Первичный ключ');
             $table->bigInteger('user_id')->comment('id пользователя');
-            $table->tinyInteger('type')->comment('Тип (доход/расход)');
+            $table->integer('operation_type_id')->comment('id типа операции');
             $table->string('name')->comment('Наименование');
             $table->string('description')->nullable()->default('')->comment('Описание');
             $table->index('user_id');

@@ -17,7 +17,7 @@ class OperationService
 
     public function createOperation(
         int $accountId,
-        int $operationType,
+        int $operationTypeId,
         int $sum,
         ?string $sourceTableName,
         ?int $sourceTableId,
@@ -29,7 +29,7 @@ class OperationService
         return $this->operationRepository->createOperation(
             $userId,
             $accountId,
-            $operationType,
+            $operationTypeId,
             $sum * 100,
             $sourceTableName,
             $sourceTableId,
