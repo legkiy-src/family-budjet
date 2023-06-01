@@ -69,12 +69,8 @@ class RevenueService
                 $description
             );
 
-            /*dump($account);
-            dump($account['account']->balance);
-            dump($totalSum);
-            dd($balance);*/
             $this->accountService->balanceIncrement($accountId, $totalSum);
-//dump($balance);
+
             return $this->operationService->updateSourceTableId($operationId, $revenueId);
         });
     }
