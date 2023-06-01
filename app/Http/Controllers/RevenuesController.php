@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\AccountService;
 use App\Services\ArticleService;
-use App\Services\RevenueService;
+use App\Services\Revenue\RevenueService;
 use Illuminate\Http\Request;
 
 class RevenuesController extends Controller

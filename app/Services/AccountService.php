@@ -2,11 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\Currency;
 use App\Repositories\AccountRepository;
 use App\Repositories\CurrencyRepository;
+use App\Services\Expense\Exceptions\NotEnoughMoneyException;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 
 class AccountService
 {
@@ -68,22 +67,28 @@ class AccountService
         return $this->accountRepository->updateBalance($userId, $id, $balance * 100);
     }
 
-    public function balanceIncrement(int $id, float $sum) : bool
+    public function balanceIncrement(int $id, int $sum) : bool
     {
         $userId = auth()->user()->id;
-
         $account = $this->accountRepository->getAccountById($id, $userId);
-        $account->balance += $sum;
+        $account->balance += $sum * 100;
 
         return $account->save();
     }
 
-    public function balanceDecrement(int $id, float $sum) : bool
+    public function balanceDecrement(int $id, int $sum) : bool
     {
         $userId = auth()->user()->id;
 
         $account = $this->accountRepository->getAccountById($id, $userId);
-        $account->balance -= $sum;
+        $decrementedValue = $sum * 100;
+
+        if ($account->balance < $decrementedValue)
+        {
+            throw new NotEnoughMoneyException();
+        }
+
+        $account->balance -= $sum * 100;
 
         return $account->save();
     }
