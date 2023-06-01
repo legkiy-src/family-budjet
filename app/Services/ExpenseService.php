@@ -73,9 +73,7 @@ class ExpenseService
                 $description
             );
 
-            $balance = ($account['account']->balance + $totalSum) * 100;
-
-            $this->accountService->balanceDecrement($accountId, $balance);
+            $this->accountService->balanceDecrement($accountId, $totalSum);
 
             return $this->operationService->updateSourceTableId($operationId, $revenueId);
         });

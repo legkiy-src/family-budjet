@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Services\AccountService;
 use App\Services\ArticleService;
+use App\Services\Expense\Exceptions\NotEnoughMoneyException;
 use App\Services\ExpenseService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class ExpenseController extends Controller
 {
@@ -55,12 +57,21 @@ class ExpenseController extends Controller
             'description' => 'max:255'
         ]);
 
-        $this->expenseService->createExpense(
-            $request->post('account'),
-            $request->post('article'),
-            $request->post('total_sum'),
-            $request->post('description')
-        );
+        try
+        {
+            $this->expenseService->createExpense(
+                $request->post('account'),
+                $request->post('article'),
+                $request->post('total_sum'),
+                $request->post('description')
+            );
+        }
+        catch (NotEnoughMoneyException $exception)
+        {
+            return Redirect::back()->withInput($request->all())->withErrors([
+                $exception->getMessage(),
+            ]);
+        }
 
         return redirect('/expenses');
     }

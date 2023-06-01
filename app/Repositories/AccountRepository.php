@@ -57,7 +57,7 @@ class AccountRepository
             ]);
     }
 
-    public function updateBalance(int $userId, int $id, float $balance): bool
+    public function updateBalance(int $userId, int $id, int $balance): bool
     {
         $account = Account::query()
             ->where('user_id', '=', $userId)

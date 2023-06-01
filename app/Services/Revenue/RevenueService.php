@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Revenue;
 
 use App\Repositories\RevenuesRepository;
+use App\Services\AccountService;
+use App\Services\OperationService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -67,9 +69,7 @@ class RevenueService
                 $description
             );
 
-            $balance = ($account['account']->balance + $totalSum) * 100;
-
-            $this->accountService->balanceIncrement($accountId, $balance);
+            $this->accountService->balanceIncrement($accountId, $totalSum);
 
             return $this->operationService->updateSourceTableId($operationId, $revenueId);
         });
