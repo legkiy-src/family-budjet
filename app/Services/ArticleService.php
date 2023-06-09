@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Repositories\ArticleRepository;
-use App\Repositories\OperationRepository;
 use App\Repositories\OperationTypeRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -50,11 +49,11 @@ class ArticleService
         return $this->articleRepository->getArticleById($userId, $id);
     }
 
-    public function updateArticle(int $id, int $type, string $name, ?string $description) : bool
+    public function updateArticle(int $id, int $operationTypeId, string $name, ?string $description) : bool
     {
         $userId = auth()->user()->id;
 
-        return $this->articleRepository->updateArticle($userId, $id, $type, $name, $description);
+        return $this->articleRepository->updateArticle($userId, $id, $operationTypeId, $name, $description);
     }
 
     public function deleteArticle(int $id) : mixed

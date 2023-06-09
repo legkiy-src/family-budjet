@@ -17,17 +17,7 @@
             <tbody>
             @forelse($articles as $article)
                 <tr>
-                    @php
-                        if ($article->type === 1)
-                        {
-                            $articleType = 'Доход';
-                        }
-                        else
-                        {
-                            $articleType = 'Расход';
-                        }
-                    @endphp
-                    <td>{{ $articleType }}</td>
+                    <td>{{ $article->operationType->name }}</td>
                     <td><a href="{{ route('articles.edit', ['id' => $article['id']]) }}">{{ $article['name'] }}</a></td>
                     <td>{{ $article->description }}</td>
                     <td>

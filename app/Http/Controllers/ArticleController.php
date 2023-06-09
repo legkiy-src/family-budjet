@@ -60,16 +60,18 @@ class ArticleController extends Controller
     public function edit(Request $request, int $id)
     {
         $article = $this->articleService->getArticleById($id);
+        $operationTypes = $this->operationTypeService->getAllOperationsTypes();
 
         if (!$request->all()) {
             return view('articles.edit', [
-                'article' => $article
+                'article' => $article,
+                'operationTypes' => $operationTypes
             ]);
         }
 
         $this->articleService->updateArticle(
             $id,
-            $request->post('type'),
+            $request->post('operationType'),
             $request->post('name'),
             (string)$request->post('description')
         );
