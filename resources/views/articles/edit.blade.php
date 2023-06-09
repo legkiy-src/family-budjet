@@ -14,10 +14,15 @@
     <form action="{{ route('articles.edit', ['id' => $article->id]) }}" method="POST">
         @csrf
         <div class="mb-3">
-            <label for="type" class="form-label">Тип</label>
-            <select id="type" name="type" class="form-select">
-                <option value="1" {{ $selected = $article->type === 1 ? 'selected' : '' }}>Доход</option>
-                <option value="2" {{ $selected = $article->type === 2 ? 'selected' : '' }}>Расход</option>
+            <label for="operationType" class="form-label">Тип</label>
+            <select id="operationType" name="operationType" class="form-select">
+                @foreach($operationTypes as $operationType)
+                    @if ($operationType->id == $article->operationType->id)
+                        <option value="{{ $operationType->id }}" selected>{{ $operationType->name }}</option>
+                    @else
+                        <option value="{{ $operationType->id }}">{{ $operationType->name }}</option>
+                    @endif
+                @endforeach
             </select>
         </div>
         <div class="mb-3">

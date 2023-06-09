@@ -28,19 +28,19 @@ class ArticleRepository
 
     public function getArticleById(int $userId, int $id) : ?Model
     {
-        return Article::with('operationTypes')
+        return Article::with('operationType')
             ->where('user_id', $userId)
             ->where('id', $id)
             ->first();
     }
 
-    public function updateArticle(int $userId, int $id, int $type, string $name, ?string $description) : bool
+    public function updateArticle(int $userId, int $id, int $operationTypeId, string $name, ?string $description) : bool
     {
         return Article::query()
             ->where('user_id', '=', $userId)
             ->where('id', '=', $id)
             ->update([
-                'type' => $type,
+                'operation_type_id' => $operationTypeId,
                 'name' => $name,
                 'description' => $description
             ]);
