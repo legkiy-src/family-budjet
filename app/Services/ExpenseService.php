@@ -50,15 +50,13 @@ class ExpenseService
     {
         $userId = $this->getUserId();
 
-        $account = $this->accountService->getAccountById($accountId);
-
         return DB::transaction(function () use ($userId, $accountId, $articleId, $totalSum, $description, $account) {
 
             $article = $this->articleService->getArticleById($articleId);
 
             $operationId = $this->operationService->createOperation(
                 $accountId,
-                $article->operationTypes->id,
+                $article->operationType->id,
                 $totalSum,
                 'expenses',
                 null
