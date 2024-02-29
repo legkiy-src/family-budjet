@@ -21,7 +21,7 @@
                 <tr>
                     <td><a href="{{ route('expenses.edit', ['id' => $expense['id']]) }}">{{ $expense['created_at'] }}</a></td>
                     <td>{{ $expense->account['name'] }}</td>
-                    <td>{{ !empty($expense->article['name']) ?? '' }}</td>
+                    <td>{{ $expense->article['name'] ?? '' }}</td>
                     <td>{{ $expense->total_sum  / 100  }}</td>
                     <td>{{ $expense->description }}</td>
                     <td>

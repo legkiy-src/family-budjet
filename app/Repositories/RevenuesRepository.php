@@ -10,7 +10,7 @@ class RevenuesRepository
 {
     public function getRevenues(int $userId) : Collection
     {
-        return Revenue::with('account')
+        return Revenue::with(['account', 'article'])
             ->where('user_id', '=', $userId)
             ->get();
     }
