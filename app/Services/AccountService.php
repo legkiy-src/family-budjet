@@ -85,10 +85,12 @@ class AccountService
 
         if ($account->balance < $decrementedValue)
         {
-            throw new NotEnoughMoneyException();
+            $account->balance = 0;
         }
-
-        $account->balance -= $sum * 100;
+        else
+        {
+            $account->balance -= $sum * 100;
+        }
 
         return $account->save();
     }
