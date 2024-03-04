@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\AccountService;
 use App\Services\ArticleService;
 use App\Services\Expense\Exceptions\NotEnoughMoneyException;
-use App\Services\ExpenseService;
+use App\Services\Expense\ExpenseService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
