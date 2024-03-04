@@ -1,10 +1,13 @@
 <?php
 
 
-namespace App\Services;
+namespace App\Services\Expense;
 
 
 use App\Repositories\ExpenseRepository;
+use App\Services\AccountService;
+use App\Services\ArticleService;
+use App\Services\OperationService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
