@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Account;
 
 use App\Repositories\AccountRepository;
 use App\Repositories\CurrencyRepository;
@@ -21,15 +21,26 @@ class AccountService
         $this->currencyRepository = $currencyRepository;
     }
 
+    private function getUserId(): int
+    {
+        if (empty($this->userId))
+        {
+            $this->userId = auth()->user()->id;
+        }
+
+        return $this->userId;
+    }
+
     public function getAccounts() : Collection
     {
-        $userId = auth()->user()->id;
+        $userId = $this->getUserId();
+
         return $this->accountRepository->getAccounts($userId);
     }
 
     public function getAccountById(int $id) : array
     {
-        $userId = auth()->user()->id;
+        $userId = $this->getUserId();
         $currencies = $this->currencyRepository->getCurrenciesByUserId($userId);
         $account =  $this->accountRepository->getAccountById($id, $userId);
 
@@ -41,35 +52,35 @@ class AccountService
 
     public function updateAccount(int $id, ?string $name, ?int $balance, ?int $currency, ?string $description) : int
     {
-        $userId = auth()->user()->id;
+        $userId = $this->getUserId();
 
         return $this->accountRepository->updateAccount($userId, $id, $name, $balance * 100, $currency, $description);
     }
 
     public function deleteAccount(int $id) : mixed
     {
-        $userId = auth()->user()->id;
+        $userId = $this->getUserId();
 
         return $this->accountRepository->deleteAccount($userId, $id);
     }
 
     public function createAccount(string $name, int $balance, int $currency, ?string $description) : bool
     {
-        $userId = auth()->user()->id;
+        $userId = $this->getUserId();
 
         return $this->accountRepository->createAccount($userId, $name, $balance * 100, $currency, $description);
     }
 
     public function updateBalance(int $id, int $balance) : bool
     {
-        $userId = auth()->user()->id;
+        $userId = $this->getUserId();
 
         return $this->accountRepository->updateBalance($userId, $id, $balance * 100);
     }
 
     public function balanceIncrement(int $id, int $sum) : bool
     {
-        $userId = auth()->user()->id;
+        $userId = $this->getUserId();
         $account = $this->accountRepository->getAccountById($id, $userId);
         $account->balance += $sum * 100;
 
@@ -78,19 +89,17 @@ class AccountService
 
     public function balanceDecrement(int $id, int $sum) : bool
     {
-        $userId = auth()->user()->id;
+        $userId = $this->getUserId();
 
         $account = $this->accountRepository->getAccountById($id, $userId);
-        $decrementedValue = $sum * 100;
+        $decrementedValue = $sum;
 
         if ($account->balance < $decrementedValue)
         {
-            $account->balance = 0;
+            throw new NotEnoughMoneyException();
         }
-        else
-        {
-            $account->balance -= $sum * 100;
-        }
+
+        $account->balance -= $sum;
 
         return $account->save();
     }

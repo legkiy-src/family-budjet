@@ -11,9 +11,10 @@
             </ul>
         </div>
     @endif
-    <form action="{{ route('accounts.edit', ['id' => $account->id]) }}" method="POST">
+    <form action="{{ route('accounts.update') }}" method="POST">
         @csrf
         <div class="mb-3">
+            <input type="hidden" name="id" value="{{ $account->id }}">
             <label for="name" class="form-label">Наименование</label>
             <input type="text" class="form-control" id="name" name="name" value="{{ $account->name }}">
         </div>

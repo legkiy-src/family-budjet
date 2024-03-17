@@ -10,7 +10,7 @@ class ExpenseRepository
 {
     public function getExpenses(int $userId) : Collection
     {
-        return Expense::with('article')
+        return Expense::with(['article', 'account'])
             ->where('user_id', $userId)
             ->get();
     }

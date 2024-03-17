@@ -11,7 +11,7 @@
             </ul>
         </div>
     @endif
-    <form action="{{ route('expenses.create') }}" method="POST">
+    <form action="{{ route('expenses.store') }}" method="POST">
         @csrf
         <div class="mb-3">
             <label for="accounts" class="form-label">Счёт</label>

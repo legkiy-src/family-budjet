@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
 
-use App\Services\AccountService;
-use App\Services\ArticleService;
+use App\Http\Controllers\Controller;
+use App\Services\Account\AccountService;
+use App\Services\Article\ArticleService;
 use App\Services\Expense\Exceptions\NotEnoughMoneyException;
 use App\Services\Expense\ExpenseService;
 use Illuminate\Http\Request;
@@ -37,37 +38,27 @@ class ExpenseController extends Controller
         );
     }
 
-    public function create(Request $request)
+    public function create()
     {
-        if (!$request->all())
-        {
-            $accounts = $this->accountService->getAccounts();
-            $articles = $this->articleService->getArticlesByOperationTypeName('Расход');
+        $accounts = $this->accountService->getAccounts();
+        $articles = $this->articleService->getArticlesByOperationTypeName('Расход');
 
-            return view('expenses.create', [
-                'accounts' => $accounts,
-                'articles' => $articles,
-            ]);
-        }
-
-        $request->validate([
-            'account' => 'required|numeric',
-            'article' => 'required|numeric',
-            'total_sum' => 'required|numeric',
-            'description' => 'max:255'
+        return view('expenses.create', [
+            'accounts' => $accounts,
+            'articles' => $articles,
         ]);
+    }
 
-        try
-        {
+    public function store(Request $request)
+    {
+        try {
             $this->expenseService->createExpense(
                 $request->post('account'),
                 $request->post('article'),
                 $request->post('total_sum'),
                 $request->post('description')
             );
-        }
-        catch (NotEnoughMoneyException $exception)
-        {
+        } catch (NotEnoughMoneyException $exception) {
             return Redirect::back()->withInput($request->all())->withErrors([
                 $exception->getMessage(),
             ]);
@@ -76,29 +67,23 @@ class ExpenseController extends Controller
         return redirect('/expenses');
     }
 
-    public function edit(Request $request, int $id)
+    public function edit(int $id)
     {
         $accounts = $this->accountService->getAccounts();
-        $articles = $this->articleService->getArticles();
+        $articles = $this->articleService->getArticlesByOperationTypeName('Расход');
         $expense = $this->expenseService->getExpenseById($id);
 
-        if (!$request->all()) {
-            return view('expenses.edit', [
-                'accounts' => $accounts,
-                'articles' => $articles,
-                'expense' => $expense
-            ]);
-        }
-
-        $request->validate([
-            'account' => 'required|numeric',
-            'article' => 'required|numeric',
-            'total_sum' => 'required|numeric',
-            'description' => 'max:255'
+        return view('expenses.edit', [
+            'accounts' => $accounts,
+            'articles' => $articles,
+            'expense' => $expense
         ]);
+    }
 
+    public function update(Request $request)
+    {
         $this->expenseService->updateExpense(
-            $id,
+            $request->post('id'),
             $request->post('account'),
             $request->post('article'),
             $request->post('total_sum'),
@@ -108,7 +93,7 @@ class ExpenseController extends Controller
         return redirect('/expenses');
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
         $this->expenseService->deleteExpense($id);
 

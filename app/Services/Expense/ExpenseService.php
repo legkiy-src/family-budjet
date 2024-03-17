@@ -5,8 +5,9 @@ namespace App\Services\Expense;
 
 
 use App\Repositories\ExpenseRepository;
-use App\Services\AccountService;
-use App\Services\ArticleService;
+use App\Services\Account\AccountService;
+use App\Services\Article\ArticleService;
+use App\Services\Expense\Exceptions\NotEnoughMoneyException;
 use App\Services\OperationService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -76,7 +77,14 @@ class ExpenseService
                 $description
             );
 
-            $this->accountService->balanceDecrement($accountId, $totalSum);
+            try
+            {
+                $this->accountService->balanceDecrement($accountId, $totalSum);
+            }
+            catch (NotEnoughMoneyException)
+            {
+                throw new NotEnoughMoneyException();
+            }
 
             return $this->operationService->updateSourceTableId($operationId, $revenueId);
         });
@@ -116,7 +124,7 @@ class ExpenseService
 
         return DB::transaction(function () use ($userId, $id, $revenue) {
 
-            $this->accountService->balanceDecrement($revenue->account_id, $revenue->total_sum);
+            $this->accountService->balanceIncrement($revenue->account_id, $revenue->total_sum);
 
             return $this->expenseRepository->deleteExpense($userId, $id);
         });
