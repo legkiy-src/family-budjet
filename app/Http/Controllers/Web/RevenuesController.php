@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
 
-use App\Services\AccountService;
-use App\Services\ArticleService;
+use App\Http\Controllers\Controller;
+use App\Services\Account\AccountService;
+use App\Services\Article\ArticleService;
 use App\Services\Revenue\RevenueService;
 use Illuminate\Http\Request;
 
@@ -35,26 +36,19 @@ class RevenuesController extends Controller
         );
     }
 
-    public function create(Request $request)
+    public function create()
     {
-        if (!$request->all())
-        {
-            $accounts = $this->accountService->getAccounts();
-            $articles = $this->articleService->getArticlesByOperationTypeName('Доход');
+        $accounts = $this->accountService->getAccounts();
+        $articles = $this->articleService->getArticlesByOperationTypeName('Доход');
 
-            return view('revenues.create', [
-                'accounts' => $accounts,
-                'articles' => $articles,
-            ]);
-        }
-
-        $request->validate([
-            'account' => 'required|numeric',
-            'article' => 'required|numeric',
-            'total_sum' => 'required|numeric',
-            'description' => 'max:255'
+        return view('revenues.create', [
+            'accounts' => $accounts,
+            'articles' => $articles,
         ]);
+    }
 
+    public function store(Request $request)
+    {
         $this->revenuesService->createRevenue(
             $request->post('account'),
             $request->post('article'),
@@ -65,29 +59,23 @@ class RevenuesController extends Controller
         return redirect('/revenues');
     }
 
-    public function edit(Request $request, int $id)
+    public function edit($id)
     {
         $accounts = $this->accountService->getAccounts();
-        $articles = $this->articleService->getArticles();
+        $articles = $this->articleService->getArticlesByOperationTypeName('Доход');
         $revenue = $this->revenuesService->getRevenueById($id);
 
-        if (!$request->all()) {
-            return view('revenues.edit', [
-                'accounts' => $accounts,
-                'articles' => $articles,
-                'revenue' => $revenue
-            ]);
-        }
-
-        $request->validate([
-            'account' => 'required|numeric',
-            'article' => 'required|numeric',
-            'total_sum' => 'required|numeric',
-            'description' => 'max:255'
+        return view('revenues.edit', [
+            'accounts' => $accounts,
+            'articles' => $articles,
+            'revenue' => $revenue
         ]);
+    }
 
+    public function update(Request $request)
+    {
         $this->revenuesService->updateRevenue(
-            $id,
+            $request->post('id'),
             $request->post('account'),
             $request->post('article'),
             $request->post('total_sum'),
@@ -97,7 +85,7 @@ class RevenuesController extends Controller
         return redirect('/revenues');
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
         $this->revenuesService->deleteRevenue($id);
 

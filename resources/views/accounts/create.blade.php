@@ -10,7 +10,7 @@
             </ul>
         </div>
     @endif
-    <form action="{{ route('accounts.create') }}" method="POST">
+    <form action="{{ route('accounts.store') }}" method="POST">
         @csrf
         <div class="mb-3">
             <label for="name" class="form-label">Наименование</label>
@@ -26,7 +26,7 @@
         </div>
         <div class="mb-3">
             <label for="balance" class="form-label">Баланс</label>
-            <input type="number" min="0.01" step="0.01" class="form-control" id="balance" name="balance" value="{{ number_format(old('balance'), 2)}}">
+            <input type="text" class="form-control" id="balance" name="balance" value="{{ number_format(old('balance'), 2)}}">
         </div>
         <div class="mb-3">
             <label for="description" class="form-label">Описание</label>

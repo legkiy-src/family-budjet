@@ -3,7 +3,7 @@
 namespace App\Services\Revenue;
 
 use App\Repositories\RevenuesRepository;
-use App\Services\AccountService;
+use App\Services\Account\AccountService;
 use App\Services\OperationService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;

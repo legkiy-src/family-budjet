@@ -1,12 +1,11 @@
 <?php
 
-use App\Http\Controllers\AccountController;
-use App\Http\Controllers\ArticleController;
-use App\Http\Controllers\CurrencyController;
-use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\Web\ArticleController;
+use App\Http\Controllers\Web\CurrencyController;
+use App\Http\Controllers\Web\ExpenseController;
 use App\Http\Controllers\OperationController;
-use App\Http\Controllers\RevenuesController;
-use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\Web\RevenuesController;
+use App\Http\Controllers\Web\AccountController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,26 +36,25 @@ Route::get('/', function () {
 });
 
 Route::get('/operations{id?}', [OperationController::class, 'index'])->name('operations');
-//Route::get('/articles{id?}', [ArticleController::class, 'index'])->name('articles');
-//Route::get('/currencies{id?}', [CurrencyController::class, 'index'])->name('currencies');
+
 Route::get('/reports', function () {
     return view('reports.reports');
 })->middleware(['auth'])->name('reports');
 
 Route::group(['middleware' => ['auth']], function () {
 
-    /*Route::get('/', function () {
-        return redirect('/accounts');
-    });*/
-
     Route::group(['prefix' => "accounts"],function() {
         Route::get('/', [AccountController::class, 'index'])->name('accounts');
         Route::group(['as' => "accounts."], function() {
-            Route::any('create', [AccountController::class, 'create'])->name('create');
-        });
-        Route::group(['prefix' => '{id}', 'as' => "accounts."],function() {
-            Route::match(['get', 'post'], '/edit', [AccountController::class, 'edit'])->name('edit');
-            Route::get('/delete', [AccountController::class, 'delete'])->name('delete');
+            Route::get('create', [AccountController::class, 'create'])->name('create');
+            Route::post('store', [AccountController::class, 'store'])->name('store');
+            Route::get('{id}/edit', [AccountController::class, 'edit'])
+                ->name('edit')
+                ->where('id', '[0-9]+');
+            Route::post('update', [AccountController::class, 'update'])->name('update');
+            Route::get('{id}/destroy', [AccountController::class, 'destroy'])
+                ->name('destroy')
+                ->where('id', '[0-9]+');
         });
     });
 
@@ -64,43 +62,59 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/', [CurrencyController::class, 'index'])->name('currencies');
         Route::group(['as' => "currencies."], function() {
             Route::any('create', [CurrencyController::class, 'create'])->name('create');
-        });
-        Route::group(['prefix' => '{id}', 'as' => "currencies."],function() {
-            Route::match(['get', 'post'], '/edit', [CurrencyController::class, 'edit'])->name('edit');
-            Route::get('/delete', [CurrencyController::class, 'delete'])->name('delete');
+            Route::post('store', [CurrencyController::class, 'store'])->name('store');
+            Route::get('{id}/edit', [CurrencyController::class, 'edit'])
+                ->name('edit')
+                ->where('id', '[0-9]+');
+            Route::post('update', [CurrencyController::class, 'update'])->name('update');
+            Route::get('{id}/destroy', [CurrencyController::class, 'destroy'])
+                ->name('destroy')
+                ->where('id', '[0-9]+');
         });
     });
 
     Route::group(['prefix' => "articles"],function() {
         Route::get('/', [ArticleController::class, 'index'])->name('articles');
         Route::group(['as' => "articles."], function() {
-            Route::any('create', [ArticleController::class, 'create'])->name('create');
-        });
-        Route::group(['prefix' => '{id}', 'as' => "articles."],function() {
-            Route::match(['get', 'post'], '/edit', [ArticleController::class, 'edit'])->name('edit');
-            Route::get('/delete', [ArticleController::class, 'delete'])->name('delete');
+            Route::get('create', [ArticleController::class, 'create'])->name('create');
+            Route::post('store', [ArticleController::class, 'store'])->name('store');
+            Route::get('{id}/edit', [ArticleController::class, 'edit'])
+                ->name('edit')
+                ->where('id', '[0-9]+');
+            Route::post('update', [ArticleController::class, 'update'])->name('update');
+            Route::get('{id}/destroy', [ArticleController::class, 'destroy'])
+                ->name('destroy')
+                ->where('id', '[0-9]+');
         });
     });
 
     Route::group(['prefix' => "revenues"],function() {
         Route::get('/', [RevenuesController::class, 'index'])->name('revenues');
         Route::group(['as' => "revenues."], function() {
-            Route::any('create', [RevenuesController::class, 'create'])->name('create');
-        });
-        Route::group(['prefix' => '{id}', 'as' => "revenues."],function() {
-            Route::match(['get', 'post'], '/edit', [RevenuesController::class, 'edit'])->name('edit');
-            Route::get('/delete', [RevenuesController::class, 'delete'])->name('delete');
+            Route::get('create', [RevenuesController::class, 'create'])->name('create');
+            Route::post('store', [RevenuesController::class, 'store'])->name('store');
+            Route::get('{id}/edit', [RevenuesController::class, 'edit'])
+                ->name('edit')
+                ->where('id', '[0-9]+');
+            Route::post('update', [RevenuesController::class, 'update'])->name('update');
+            Route::get('{id}/destroy', [RevenuesController::class, 'destroy'])
+                ->name('destroy')
+                ->where('id', '[0-9]+');
         });
     });
 
     Route::group(['prefix' => "expenses"],function() {
         Route::get('/', [ExpenseController::class, 'index'])->name('expenses');
         Route::group(['as' => "expenses."], function() {
-            Route::any('create', [ExpenseController::class, 'create'])->name('create');
-        });
-        Route::group(['prefix' => '{id}', 'as' => "expenses."],function() {
-            Route::match(['get', 'post'], '/edit', [ExpenseController::class, 'edit'])->name('edit');
-            Route::get('/delete', [ExpenseController::class, 'delete'])->name('delete');
+            Route::get('create', [ExpenseController::class, 'create'])->name('create');
+            Route::post('store', [ExpenseController::class, 'store'])->name('store');
+            Route::get('{id}/edit', [ExpenseController::class, 'edit'])
+                ->name('edit')
+                ->where('id', '[0-9]+');
+            Route::post('update', [ExpenseController::class, 'update'])->name('update');
+            Route::get('{id}/destroy', [ExpenseController::class, 'destroy'])
+                ->name('destroy')
+                ->where('id', '[0-9]+');
         });
     });
 });

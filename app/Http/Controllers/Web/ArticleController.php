@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
 
-use App\Services\ArticleService;
+use App\Http\Controllers\Controller;
+use App\Services\Article\ArticleService;
 use App\Services\OperationTypeService;
 use Illuminate\Http\Request;
 
@@ -31,23 +32,17 @@ class ArticleController extends Controller
         );
     }
 
-    public function create(Request $request)
+    public function create()
     {
-        if (!$request->all())
-        {
-            $operationTypes = $this->operationTypeService->getAllOperationsTypes();
+        $operationTypes = $this->operationTypeService->getAllOperationsTypes();
 
-            return view('articles.create', [
-                'operationTypes' => $operationTypes
-            ]);
-        }
-
-        $request->validate([
-            'operationType' => 'required|numeric',
-            'name' => 'required|max:255',
-            'description' => 'max:255'
+        return view('articles.create', [
+            'operationTypes' => $operationTypes
         ]);
+    }
 
+    public function store(Request $request)
+    {
         $this->articleService->createArticle(
             $request->post('operationType'),
             $request->post('name'),
@@ -57,20 +52,21 @@ class ArticleController extends Controller
         return redirect('/articles');
     }
 
-    public function edit(Request $request, int $id)
+    public function edit(int $id)
     {
         $article = $this->articleService->getArticleById($id);
         $operationTypes = $this->operationTypeService->getAllOperationsTypes();
 
-        if (!$request->all()) {
-            return view('articles.edit', [
-                'article' => $article,
-                'operationTypes' => $operationTypes
-            ]);
-        }
+        return view('articles.edit', [
+            'article' => $article,
+            'operationTypes' => $operationTypes
+        ]);
+    }
 
+    public function update(Request $request)
+    {
         $this->articleService->updateArticle(
-            $id,
+            $request->post('id'),
             $request->post('operationType'),
             $request->post('name'),
             (string)$request->post('description')
@@ -79,7 +75,7 @@ class ArticleController extends Controller
         return redirect('/articles');
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
         $this->articleService->deleteArticle($id);
 

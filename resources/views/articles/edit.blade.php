@@ -11,9 +11,10 @@
             </ul>
         </div>
     @endif
-    <form action="{{ route('articles.edit', ['id' => $article->id]) }}" method="POST">
+    <form action="{{ route('articles.update') }}" method="POST">
         @csrf
         <div class="mb-3">
+            <input type="hidden" name="id" value="{{ $article->id }}">
             <label for="operationType" class="form-label">Тип</label>
             <select id="operationType" name="operationType" class="form-select">
                 @foreach($operationTypes as $operationType)

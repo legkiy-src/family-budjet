@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Article;
 
 use App\Repositories\ArticleRepository;
 use App\Repositories\OperationTypeRepository;
@@ -12,6 +12,7 @@ class ArticleService
 {
     private ArticleRepository $articleRepository;
     private OperationTypeRepository $operationTypeRepository;
+    private int $userId;
 
     public function __construct(
         ArticleRepository $articleRepository,
@@ -20,6 +21,15 @@ class ArticleService
     {
         $this->articleRepository = $articleRepository;
         $this->operationTypeRepository = $operationTypeRepository;
+    }
+
+    private function getUserId(): int
+    {
+        if (empty($this->userId)) {
+            $this->userId = auth()->user()->id;
+        }
+
+        return $this->userId;
     }
 
     public function getArticles() : Collection

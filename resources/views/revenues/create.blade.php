@@ -10,7 +10,7 @@
             </ul>
         </div>
     @endif
-    <form action="{{ route('revenues.create') }}" method="POST">
+    <form action="{{ route('revenues.store') }}" method="POST">
         @csrf
         <div class="mb-3">
             <label for="accounts" class="form-label">Счёт</label>
