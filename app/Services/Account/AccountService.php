@@ -42,7 +42,7 @@ class AccountService
     {
         $userId = $this->getUserId();
         $currencies = $this->currencyRepository->getCurrenciesByUserId($userId);
-        $account =  $this->accountRepository->getAccountById($id, $userId);
+        $account =  $this->accountRepository->getAccountById($userId, $id);
 
         return [
             'account' => $account,
@@ -78,20 +78,31 @@ class AccountService
         return $this->accountRepository->updateBalance($userId, $id, $balance * 100);
     }
 
+    /**
+     * @param int $id
+     * @param int $sum - сумма в копейках
+     * @return bool
+     */
     public function balanceIncrement(int $id, int $sum) : bool
     {
         $userId = $this->getUserId();
-        $account = $this->accountRepository->getAccountById($id, $userId);
-        $account->balance += $sum * 100;
+        $account = $this->accountRepository->getAccountById($userId, $id);
+        $account->balance += $sum;
 
         return $account->save();
     }
 
+    /**
+     * @param int $id
+     * @param int $sum - сумма в копейках
+     * @return bool
+     * @throws NotEnoughMoneyException
+     */
     public function balanceDecrement(int $id, int $sum) : bool
     {
         $userId = $this->getUserId();
 
-        $account = $this->accountRepository->getAccountById($id, $userId);
+        $account = $this->accountRepository->getAccountById($userId, $id);
         $decrementedValue = $sum;
 
         if ($account->balance < $decrementedValue)
