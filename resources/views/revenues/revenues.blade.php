@@ -20,7 +20,7 @@
             @forelse($revenues as $revenue)
                 <tr>
                     <td><a href="{{ route('revenues.edit', ['id' => $revenue['id']]) }}">{{ $revenue['created_at'] }}</a></td>
-                    <td>{{ $revenue->account['name'] }}</td>
+                    <td>{{ $revenue->account['name'] ?? '' }}</td>
                     <td>{{ $revenue->article['name'] ?? '' }}</td>
                     <td>{{ $revenue->total_sum  / 100  }}</td>
                     <td>{{ $revenue->description }}</td>

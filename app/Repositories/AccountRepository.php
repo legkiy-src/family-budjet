@@ -15,7 +15,7 @@ class AccountRepository
             ->get();
     }
 
-    public function getAccountById(int $id, int $userId): ?Model
+    public function getAccountById(int $userId, int $id): ?Model
     {
         return Account::query()
             ->where('user_id', $userId)
