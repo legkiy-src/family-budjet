@@ -3,7 +3,7 @@
 namespace App\Services\Revenue;
 
 use App\Repositories\AccountRepository;
-use App\Repositories\RevenuesRepository;
+use App\Repositories\RevenueRepository;
 use App\Services\Account\AccountService;
 use App\Services\OperationService;
 use Illuminate\Database\Eloquent\Collection;
@@ -12,14 +12,14 @@ use Illuminate\Support\Facades\DB;
 
 class RevenueService
 {
-    private RevenuesRepository $revenuesRepository;
+    private RevenueRepository $revenuesRepository;
     private OperationService $operationService;
     private AccountService $accountService;
     private AccountRepository $accountRepository;
     private int $userId;
 
     public function __construct(
-        RevenuesRepository $revenuesRepository,
+        RevenueRepository $revenuesRepository,
         AccountRepository $accountRepository,
         OperationService $operationService,
         AccountService $accountService
@@ -61,16 +61,18 @@ class RevenueService
                 null
             );
 
+            $changedTotalSum = $totalSum * 100;
+
             $revenueId = $this->revenuesRepository->createRevenue(
                 $userId,
                 $operationId,
                 $accountId,
                 $articleId,
-                $totalSum * 100,
+                $changedTotalSum,
                 $description
             );
 
-            $this->accountService->balanceIncrement($accountId, $totalSum);
+            $this->accountService->balanceIncrement($accountId, $changedTotalSum);
 
             return $this->operationService->updateSourceTableId($operationId, $revenueId);
         });

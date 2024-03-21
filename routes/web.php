@@ -4,7 +4,7 @@ use App\Http\Controllers\Web\ArticleController;
 use App\Http\Controllers\Web\CurrencyController;
 use App\Http\Controllers\Web\ExpenseController;
 use App\Http\Controllers\OperationController;
-use App\Http\Controllers\Web\RevenuesController;
+use App\Http\Controllers\Web\RevenueController;
 use App\Http\Controllers\Web\AccountController;
 use Illuminate\Support\Facades\Route;
 
@@ -89,15 +89,15 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     Route::group(['prefix' => "revenues"],function() {
-        Route::get('/', [RevenuesController::class, 'index'])->name('revenues');
+        Route::get('/', [RevenueController::class, 'index'])->name('revenues');
         Route::group(['as' => "revenues."], function() {
-            Route::get('create', [RevenuesController::class, 'create'])->name('create');
-            Route::post('store', [RevenuesController::class, 'store'])->name('store');
-            Route::get('{id}/edit', [RevenuesController::class, 'edit'])
+            Route::get('create', [RevenueController::class, 'create'])->name('create');
+            Route::post('store', [RevenueController::class, 'store'])->name('store');
+            Route::get('{id}/edit', [RevenueController::class, 'edit'])
                 ->name('edit')
                 ->where('id', '[0-9]+');
-            Route::post('update', [RevenuesController::class, 'update'])->name('update');
-            Route::get('{id}/destroy', [RevenuesController::class, 'destroy'])
+            Route::post('update', [RevenueController::class, 'update'])->name('update');
+            Route::get('{id}/destroy', [RevenueController::class, 'destroy'])
                 ->name('destroy')
                 ->where('id', '[0-9]+');
         });

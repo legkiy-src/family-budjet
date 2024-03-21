@@ -26,8 +26,7 @@ class ExpenseService
         OperationService $operationService,
         AccountService $accountService,
         ArticleService $articleService
-    )
-    {
+    ) {
         $this->expenseRepository = $expenseRepository;
         $this->operationService = $operationService;
         $this->accountService = $accountService;
@@ -54,40 +53,38 @@ class ExpenseService
     {
         $userId = $this->getUserId();
 
-        $account = $this->accountService->getAccountById($accountId);
+        return DB::transaction(
+            function () use ($userId, $accountId, $articleId, $totalSum, $description) {
+                $article = $this->articleService->getArticleById($articleId);
 
-        return DB::transaction(function () use ($userId, $accountId, $articleId, $totalSum, $description, $account) {
+                $operationId = $this->operationService->createOperation(
+                    $accountId,
+                    $article->operationType->id,
+                    $totalSum,
+                    'expenses',
+                    null
+                );
 
-            $article = $this->articleService->getArticleById($articleId);
+                $changedTotalSum = $totalSum * 100;
 
-            $operationId = $this->operationService->createOperation(
-                $accountId,
-                $article->operationType->id,
-                $totalSum,
-                'expenses',
-                null
-            );
+                $revenueId = $this->expenseRepository->createExpense(
+                    $userId,
+                    $operationId,
+                    $accountId,
+                    $articleId,
+                    $changedTotalSum,
+                    $description
+                );
 
-            $revenueId = $this->expenseRepository->createExpense(
-                $userId,
-                $operationId,
-                $accountId,
-                $articleId,
-                $totalSum * 100,
-                $description
-            );
+                try {
+                    $this->accountService->balanceDecrement($accountId, $changedTotalSum);
+                } catch (NotEnoughMoneyException) {
+                    throw new NotEnoughMoneyException();
+                }
 
-            try
-            {
-                $this->accountService->balanceDecrement($accountId, $totalSum);
+                return $this->operationService->updateSourceTableId($operationId, $revenueId);
             }
-            catch (NotEnoughMoneyException)
-            {
-                throw new NotEnoughMoneyException();
-            }
-
-            return $this->operationService->updateSourceTableId($operationId, $revenueId);
-        });
+        );
     }
 
     public function getExpenseById(int $id): ?Model
@@ -97,23 +94,29 @@ class ExpenseService
         return $this->expenseRepository->getExpenseById($userId, $id);
     }
 
-    public function updateExpense(int $id, int $accountId, int $articleId, int $totalSum, ?string $description = ''): bool
-    {
+    public function updateExpense(
+        int $id,
+        int $accountId,
+        int $articleId,
+        int $totalSum,
+        ?string $description = ''
+    ): bool {
         $userId = $this->getUserId();
 
-        return DB::transaction(function () use ($userId, $id, $accountId, $articleId, $totalSum, $description) {
+        return DB::transaction(
+            function () use ($userId, $id, $accountId, $articleId, $totalSum, $description) {
+                $this->expenseRepository->updateExpense(
+                    $id,
+                    $userId,
+                    $accountId,
+                    $articleId,
+                    $totalSum * 100,
+                    $description
+                );
 
-            $this->expenseRepository->updateExpense(
-                $id,
-                $userId,
-                $accountId,
-                $articleId,
-                $totalSum * 100,
-                $description
-            );
-
-            return $this->accountService->updateBalance($accountId, $totalSum);
-        });
+                return $this->accountService->updateBalance($accountId, $totalSum);
+            }
+        );
     }
 
     public function deleteExpense(int $id): mixed
@@ -122,11 +125,12 @@ class ExpenseService
 
         $revenue = $this->expenseRepository->getExpenseById($userId, $id);
 
-        return DB::transaction(function () use ($userId, $id, $revenue) {
+        return DB::transaction(
+            function () use ($userId, $id, $revenue) {
+                $this->accountService->balanceIncrement($revenue->account_id, $revenue->total_sum);
 
-            $this->accountService->balanceIncrement($revenue->account_id, $revenue->total_sum);
-
-            return $this->expenseRepository->deleteExpense($userId, $id);
-        });
+                return $this->expenseRepository->deleteExpense($userId, $id);
+            }
+        );
     }
 }

@@ -5,8 +5,9 @@ namespace App\Repositories;
 use App\Models\Revenue;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
-class RevenuesRepository
+class RevenueRepository
 {
     public function getRevenues(int $userId) : Collection
     {
@@ -74,5 +75,36 @@ class RevenuesRepository
             ->where('user_id', '=', $userId)
             ->where('id', '=', $id)
             ->delete();
+    }
+
+    public function deleteRevenueByAccountId(int $userId, int $accountId): mixed
+    {
+        return Revenue::query()
+            ->where('user_id', '=', $userId)
+            ->where('account_id', '=', $accountId)
+            ->delete();
+    }
+
+    public function deleteRevenueByArticleId(int $userId, int $articleId): mixed
+    {
+        return Revenue::query()
+            ->where('user_id', '=', $userId)
+            ->where('article_id', '=', $articleId)
+            ->delete();
+    }
+
+    public function getSumGroupByAccountId(int $userId, int $articleId): Collection
+    {
+        return Revenue::query()
+            ->select(
+                'user_id',
+                'article_id',
+                'account_id',
+                DB::raw('sum(total_sum) as sum')
+            )
+            ->groupBy('user_id', 'article_id', 'account_id', 'total_sum')
+            ->having('user_id', '=', $userId)
+            ->having('article_id', '=', $articleId)
+            ->get();
     }
 }

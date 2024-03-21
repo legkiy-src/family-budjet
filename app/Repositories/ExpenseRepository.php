@@ -5,10 +5,11 @@ namespace App\Repositories;
 use App\Models\Expense;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class ExpenseRepository
 {
-    public function getExpenses(int $userId) : Collection
+    public function getExpenses(int $userId): Collection
     {
         return Expense::with(['article', 'account'])
             ->where('user_id', $userId)
@@ -22,8 +23,7 @@ class ExpenseRepository
         int $articleId,
         int $totalSum,
         ?string $description
-    ) : int
-    {
+    ): int {
         $expense = new Expense();
 
         $expense->user_id = $userId;
@@ -38,7 +38,7 @@ class ExpenseRepository
         return $expense->id;
     }
 
-    public function getExpenseById(int $userId, int $id) : ?Model
+    public function getExpenseById(int $userId, int $id): ?Model
     {
         return Expense::query()
             ->where('user_id', $userId)
@@ -53,8 +53,7 @@ class ExpenseRepository
         int $articleId,
         int $totalSum,
         ?string $description
-    ) : bool
-    {
+    ): bool {
         $expense = Expense::query()
             ->where('user_id', '=', $userId)
             ->where('id', '=', $id)
@@ -74,5 +73,36 @@ class ExpenseRepository
             ->where('user_id', '=', $userId)
             ->where('id', '=', $id)
             ->delete();
+    }
+
+    public function deleteExpenseByAccountId(int $userId, int $accountId): mixed
+    {
+        return Expense::query()
+            ->where('user_id', '=', $userId)
+            ->where('account_id', '=', $accountId)
+            ->delete();
+    }
+
+    public function deleteExpenseByArticleId(int $userId, int $articleId): mixed
+    {
+        return Expense::query()
+            ->where('user_id', '=', $userId)
+            ->where('article_id', '=', $articleId)
+            ->delete();
+    }
+
+    public function getSumGroupByAccountId(int $userId, int $articleId): Collection
+    {
+        return Expense::query()
+            ->select(
+                'user_id',
+                'article_id',
+                'account_id',
+                DB::raw('sum(total_sum) as sum')
+            )
+            ->groupBy('user_id', 'article_id', 'account_id', 'total_sum')
+            ->having('user_id', '=', $userId)
+            ->having('article_id', '=', $articleId)
+            ->get();
     }
 }

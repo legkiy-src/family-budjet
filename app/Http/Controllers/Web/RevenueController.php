@@ -8,7 +8,7 @@ use App\Services\Article\ArticleService;
 use App\Services\Revenue\RevenueService;
 use Illuminate\Http\Request;
 
-class RevenuesController extends Controller
+class RevenueController extends Controller
 {
     private RevenueService $revenuesService;
     private AccountService $accountService;
@@ -18,8 +18,7 @@ class RevenuesController extends Controller
         RevenueService $revenuesService,
         AccountService $accountService,
         ArticleService $articleService
-    )
-    {
+    ) {
         $this->revenuesService = $revenuesService;
         $this->accountService = $accountService;
         $this->articleService = $articleService;
@@ -30,7 +29,8 @@ class RevenuesController extends Controller
         $revenues = $this->revenuesService->getRevenues();
 
         return view(
-            'revenues.revenues', [
+            'revenues.revenues',
+            [
                 'revenues' => $revenues
             ]
         );
@@ -41,10 +41,13 @@ class RevenuesController extends Controller
         $accounts = $this->accountService->getAccounts();
         $articles = $this->articleService->getArticlesByOperationTypeName('Доход');
 
-        return view('revenues.create', [
-            'accounts' => $accounts,
-            'articles' => $articles,
-        ]);
+        return view(
+            'revenues.create',
+            [
+                'accounts' => $accounts,
+                'articles' => $articles,
+            ]
+        );
     }
 
     public function store(Request $request)
@@ -65,11 +68,14 @@ class RevenuesController extends Controller
         $articles = $this->articleService->getArticlesByOperationTypeName('Доход');
         $revenue = $this->revenuesService->getRevenueById($id);
 
-        return view('revenues.edit', [
-            'accounts' => $accounts,
-            'articles' => $articles,
-            'revenue' => $revenue
-        ]);
+        return view(
+            'revenues.edit',
+            [
+                'accounts' => $accounts,
+                'articles' => $articles,
+                'revenue' => $revenue
+            ]
+        );
     }
 
     public function update(Request $request)
