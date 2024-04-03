@@ -6,11 +6,12 @@ use App\Repositories\AccountRepository;
 use App\Repositories\CurrencyRepository;
 use App\Repositories\ExpenseRepository;
 use App\Repositories\RevenueRepository;
+use App\Services\BaseService;
 use App\Services\Expense\Exceptions\NotEnoughMoneyException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
-class AccountService
+class AccountService extends BaseService
 {
     private AccountRepository $accountRepository;
     private CurrencyRepository $currencyRepository;
@@ -29,15 +30,6 @@ class AccountService
         $this->expenseRepository = $expenseRepository;
     }
 
-    private function getUserId(): int
-    {
-        if (empty($this->userId)) {
-            $this->userId = auth()->user()->id;
-        }
-
-        return $this->userId;
-    }
-
     public function getAccounts(): Collection
     {
         $userId = $this->getUserId();
@@ -52,16 +44,28 @@ class AccountService
         $account = $this->accountRepository->getAccountById($userId, $id);
 
         return [
-            'account' => $account,
-            'currencies' => $currencies
+            'account' => $account?->toArray(),
+            'currencies' => $currencies?->toArray()
         ];
     }
 
-    public function updateAccount(int $id, ?string $name, ?int $balance, ?int $currency, ?string $description): int
-    {
+    public function updateAccount(
+        int $id,
+        ?string $name,
+        ?int $balance,
+        ?int $currency,
+        ?string $description
+    ): int {
         $userId = $this->getUserId();
 
-        return $this->accountRepository->updateAccount($userId, $id, $name, $balance * 100, $currency, $description);
+        return $this->accountRepository->updateAccount(
+            $userId,
+            $id,
+            $name,
+            $balance * 100,
+            $currency,
+            $description
+        );
     }
 
     public function deleteAccount(int $id): mixed
@@ -69,10 +73,7 @@ class AccountService
         $userId = $this->getUserId();
 
         return DB::transaction(
-            function () use (
-                $userId,
-                $id
-            ) {
+            function () use ($userId, $id) {
                 $this->revenueRepository->deleteRevenueByAccountId($userId, $id);
                 $this->expenseRepository->deleteExpenseByAccountId($userId, $id);
 
@@ -96,22 +97,22 @@ class AccountService
     }
 
     /**
-     * @param int $id
-     * @param int $sum - сумма в копейках
+     * @param  int  $id
+     * @param  int  $sum  - сумма в копейках
      * @return bool
      */
     public function balanceIncrement(int $id, int $sum): bool
     {
         $userId = $this->getUserId();
         $account = $this->accountRepository->getAccountById($userId, $id);
-        $account->balance += $sum;
+        $balance = $account->balance + $sum;
 
-        return $account->save();
+        return $this->accountRepository->updateBalance($userId, $id, $balance);
     }
 
     /**
-     * @param int $id
-     * @param int $sum - сумма в копейках
+     * @param  int  $id
+     * @param  int  $sum  - сумма в копейках
      * @return bool
      * @throws NotEnoughMoneyException
      */
@@ -120,14 +121,13 @@ class AccountService
         $userId = $this->getUserId();
 
         $account = $this->accountRepository->getAccountById($userId, $id);
-        $decrementedValue = $sum;
 
-        if ($account->balance < $decrementedValue) {
+        if ($account->balance < $sum) {
             throw new NotEnoughMoneyException();
         }
 
-        $account->balance -= $sum;
+        $balance = $account->balance - $sum;
 
-        return $account->save();
+        return $this->accountRepository->updateBalance($userId, $id, $balance);
     }
 }

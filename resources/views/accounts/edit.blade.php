@@ -14,18 +14,18 @@
     <form action="{{ route('accounts.update') }}" method="POST">
         @csrf
         <div class="mb-3">
-            <input type="hidden" name="id" value="{{ $account->id }}">
+            <input type="hidden" name="id" value="{{ $account['id'] }}">
             <label for="name" class="form-label">Наименование</label>
-            <input type="text" class="form-control" id="name" name="name" value="{{ $account->name }}">
+            <input type="text" class="form-control" id="name" name="name" value="{{ $account['name'] }}">
         </div>
         <div class="mb-3">
             <label for="currencies" class="form-label">Валюта</label>
             <select id="currencies" id="currencies" name="currency" class="form-select">
                 @foreach($currencies as $currency)
-                    @if($currency->id == $account->currency_id)
-                        <option selected value="{{ $currency->id }}">{{ $currency->name }}</option>
+                    @if($currency['id'] == $account['currency_id'])
+                        <option selected value="{{ $currency['id'] }}">{{ $currency['name'] }}</option>
                     @else
-                        <option value="{{ $currency->id }}">{{ $currency->name }}</option>
+                        <option value="{{ $currency['id'] }}">{{ $currency['name'] }}</option>
                     @endif
                 @endforeach
             </select>
@@ -36,7 +36,7 @@
         </div>
         <div class="mb-3">
             <label for="description" class="form-label">Описание</label>
-            <textarea class="form-control" id="description" name="description">{{ $account->description }}</textarea>
+            <textarea class="form-control" id="description" name="description">{{ $account['description'] }}</textarea>
         </div>
         <button type="submit" class="btn btn-primary">Сохранить</button>
     </form>
