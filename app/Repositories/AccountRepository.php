@@ -23,9 +23,14 @@ class AccountRepository
             ->first();
     }
 
-    public function updateAccount(int $userId, int $id, ?string $name, ?int $balance,
-                                  ?int $currency, ?string $description): int
-    {
+    public function updateAccount(
+        int $userId,
+        int $id,
+        ?string $name,
+        ?int $balance,
+        ?int $currency,
+        ?string $description
+    ): int {
         return Account::query()
             ->where('user_id', '=', $userId)
             ->where('id', '=', $id)
@@ -59,13 +64,9 @@ class AccountRepository
 
     public function updateBalance(int $userId, int $id, int $balance): bool
     {
-        $account = Account::query()
+        return Account::query()
             ->where('user_id', '=', $userId)
             ->where('id', '=', $id)
-            ->first();
-
-        $account->balance = $balance;
-
-        return $account->save();
+            ->update(['balance' => $balance]);
     }
 }
