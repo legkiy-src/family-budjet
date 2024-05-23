@@ -22,7 +22,7 @@ class CreateCurrenciesTable extends Migration
             $table->timestamps();
         });
 
-        DB::statement("ALTER TABLE currencies comment 'Валюты'");
+        DB::statement("COMMENT ON TABLE accounts IS 'Валюты'");
     }
 
     /**

@@ -20,7 +20,7 @@ class CreateOperationTypesTable extends Migration
             $table->timestamps();
         });
 
-        DB::statement("ALTER TABLE operation_types comment 'Типы операций'");
+        DB::statement("COMMENT ON TABLE accounts IS 'Типы операций'");
     }
 
     /**

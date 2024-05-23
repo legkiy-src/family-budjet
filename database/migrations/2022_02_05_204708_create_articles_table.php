@@ -24,7 +24,7 @@ class CreateArticlesTable extends Migration
             $table->timestamps();
         });
 
-        DB::statement("ALTER TABLE articles comment 'Статьи доходов/расходов'");
+        DB::statement("COMMENT ON TABLE accounts IS 'Статьи доходов/расходов'");
     }
 
     /**

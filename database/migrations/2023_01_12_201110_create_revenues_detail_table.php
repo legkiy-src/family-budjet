@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateRevenuesDetailTable extends Migration
@@ -27,7 +28,7 @@ class CreateRevenuesDetailTable extends Migration
             $table->index('sum');
         });
 
-        DB::statement("ALTER TABLE revenues_detail comment 'Состав дохода'");
+        DB::statement("COMMENT ON TABLE accounts IS 'Состав дохода'");
     }
 
     /**
