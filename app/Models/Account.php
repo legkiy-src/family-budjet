@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Account extends Model
 {
-    protected $connection = 'mysql';
     protected $table = 'accounts';
     public $primaryKey = 'id';
     public $timestamps = false;
