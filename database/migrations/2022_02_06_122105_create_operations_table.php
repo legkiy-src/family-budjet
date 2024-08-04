@@ -32,7 +32,7 @@ class CreateOperationsTable extends Migration
             $table->timestamps();
         });
 
-        DB::statement("ALTER TABLE operations comment 'Операции'");
+        DB::statement("COMMENT ON TABLE accounts IS 'Операции'");
     }
 
     /**

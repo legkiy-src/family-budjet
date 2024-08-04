@@ -29,7 +29,7 @@ class CreateExpensesTable extends Migration
             $table->index('total_sum');
         });
 
-        DB::statement("ALTER TABLE revenues comment 'Доходы'");
+        DB::statement("COMMENT ON TABLE accounts IS 'Доходы'");
     }
 
     /**

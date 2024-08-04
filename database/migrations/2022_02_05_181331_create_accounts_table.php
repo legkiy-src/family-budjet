@@ -26,7 +26,7 @@ class CreateAccountsTable extends Migration
             $table->timestamps();
         });
 
-        DB::statement("ALTER TABLE accounts comment 'Счета'");
+        DB::statement("COMMENT ON TABLE accounts IS 'Счета'");
     }
 
     /**
